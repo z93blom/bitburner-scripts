@@ -124,7 +124,7 @@ let daemonHost = null; // the name of the host of this daemon, so we don't have 
 // let hasFormulas = true;
 // let currentTerminalServer = ""; // Periodically updated when intelligence farming, the current connected terminal server.
 let dictSourceFiles = (/**@returns{{[bitnode: number]: number;}}*/() => undefined)(); // Available source files
-// let bitnodeMults = null; // bitnode multipliers that can be automatically determined after SF-5
+let bitnodeMults = null; // bitnode multipliers that can be automatically determined after SF-5
 let playerBitnode = 0;
 let haveTixApi = false, have4sApi = false; // Whether we have WSE API accesses
 let _cachedPlayerInfo = (/**@returns{Player}*/() => undefined)(); // stores multipliers for player abilities and other player info

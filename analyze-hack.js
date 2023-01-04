@@ -58,7 +58,7 @@ export async function main(ns) {
         // Temporarily change the hack level on the player object to the requested level
         const real_player_hack_skill = player.skills.hacking;
         player.skills.hacking = hackLevel;
-        
+
         // Compute the cost (ram*seconds) for each tool
         try {
             const weakenCost = weaken_ram * ns.formulas.hacking.weakenTime(server, player);
@@ -150,7 +150,7 @@ export async function main(ns) {
         serverListByExp += `\n ${order++} ${server_eval[i].hostname}, with ${server_eval[i].expRate.toPrecision(3)} exp per ram-second`;
     ns.print(serverListByExp);
 
-    ns.write('/Temp/analyze-hack.txt', JSON.stringify(server_eval.map(s => ({
+    ns.write('/temp/analyze-hack.txt', JSON.stringify(server_eval.map(s => ({
         hostname: s.hostname,
         gainRate: s.gainRate,
         expRate: s.expRate
