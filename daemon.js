@@ -95,10 +95,10 @@ export function autocomplete(data, args) {
 // let cycleTimingDelay = 0; // (Set in command line args)
 // let queueDelay = 0; // (Set in command line args) The delay that it can take for a script to start, used to pessimistically schedule things in advance
 // let maxBatches = 0; // (Set in command line args) The max number of batches this daemon will spool up to avoid running out of IRL ram (TODO: Stop wasting RAM by scheduling batches so far in advance. e.g. Grind XP while waiting for cycle start!)
-// let maxTargets = 0; // (Set in command line args) Initial value, will grow if there is an abundance of RAM
-// let maxPreppingAtMaxTargets = 3; // The max servers we can prep when we're at our current max targets and have spare RAM
+let maxTargets = 0; // (Set in command line args) Initial value, will grow if there is an abundance of RAM
+let maxPreppingAtMaxTargets = 3; // The max servers we can prep when we're at our current max targets and have spare RAM
 // // Allows some home ram to be reserved for ad-hoc terminal script running and when home is explicitly set as the "preferred server" for starting a helper
-// let homeReservedRam = 0; // (Set in command line args)
+let homeReservedRam = 0; // (Set in command line args)
 
 let allHostNames = (/**@returns {string[]}*/() => [])(); // simple name array of servers that have been discovered
 let _allServers = (/**@returns{Server[]}*/() => [])(); // Array of Server objects - our internal model of servers for hacking
@@ -110,33 +110,33 @@ let allHelpersRunning = false; // Tracks whether all long-lived helper scripts h
 let studying = false; // Whether we're currently studying
 
 // // Command line Flags
-// let hackOnly = false; // "-h" command line arg - don't grow or shrink, just hack (a.k.a. scrapping mode)
-// let stockMode = false; // "-s" command line arg - hack/grow servers in a way that boosts our current stock positions
-// let stockFocus = false;  // If true, stocks are main source of income - kill any scripts that would do them harm
+let hackOnly = false; // "-h" command line arg - don't grow or shrink, just hack (a.k.a. scrapping mode)
+let stockMode = false; // "-s" command line arg - hack/grow servers in a way that boosts our current stock positions
+let stockFocus = false;  // If true, stocks are main source of income - kill any scripts that would do them harm
 let xpOnly = false; // "-x" command line arg - focus on a strategy that produces the most hack EXP rather than money
-// let verbose = false; // "-v" command line arg - Detailed logs about batch scheduling / tuning
-// let runOnce = false; // "-o" command line arg - Good for debugging, run the main targettomg loop once then stop
-// let useHacknetNodes = false; // "-n" command line arg - Can toggle using hacknet nodes for extra hacking ram
-// let loopingMode = false;
-// let recoveryThreadPadding = 1; // How many multiples to increase the weaken/grow threads to recovery from misfires automatically (useful when RAM is abundant and timings are tight)
+let verbose = false; // "-v" command line arg - Detailed logs about batch scheduling / tuning
+let runOnce = false; // "-o" command line arg - Good for debugging, run the main targettomg loop once then stop
+let useHacknetNodes = false; // "-n" command line arg - Can toggle using hacknet nodes for extra hacking ram
+let loopingMode = false;
+let recoveryThreadPadding = 1; // How many multiples to increase the weaken/grow threads to recovery from misfires automatically (useful when RAM is abundant and timings are tight)
 
-// let daemonHost = null; // the name of the host of this daemon, so we don't have to call the function more than once.
+let daemonHost = null; // the name of the host of this daemon, so we don't have to call the function more than once.
 // let hasFormulas = true;
 // let currentTerminalServer = ""; // Periodically updated when intelligence farming, the current connected terminal server.
-// let dictSourceFiles = (/**@returns{{[bitnode: number]: number;}}*/() => undefined)(); // Available source files
+let dictSourceFiles = (/**@returns{{[bitnode: number]: number;}}*/() => undefined)(); // Available source files
 // let bitnodeMults = null; // bitnode multipliers that can be automatically determined after SF-5
-// let playerBitnode = 0;
+let playerBitnode = 0;
 let haveTixApi = false, have4sApi = false; // Whether we have WSE API accesses
-// let _cachedPlayerInfo = (/**@returns{Player}*/() => undefined)(); // stores multipliers for player abilities and other player info
+let _cachedPlayerInfo = (/**@returns{Player}*/() => undefined)(); // stores multipliers for player abilities and other player info
 let _ns = (/**@returns{NS}*/() => undefined)(); // Globally available ns reference, for convenience
 
 // Property to avoid log churn if our status hasn't changed since the last loop
 let lastUpdate = ""
 let lastUpdateTime = Date.now();
-// let lowUtilizationIterations = 0;
-// let highUtilizationIterations = 0;
-// let lastShareTime = 0; // Tracks when share was last invoked so we can respect the configured share-cooldown
-// let allTargetsPrepped = false;
+let lowUtilizationIterations = 0;
+let highUtilizationIterations = 0;
+let lastShareTime = 0; // Tracks when share was last invoked so we can respect the configured share-cooldown
+let allTargetsPrepped = false;
 
 /** Ram-dodge getting updated player info. Note that this is the only async routine called in the main loop.
  * If latency or ram instability is an issue, you may wish to try uncommenting the direct request.
